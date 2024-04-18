@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghaith Social Media</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<style>
+    /* <!-- loeder --> */
+    .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+
+    .lds-ellipsis div {
+        position: absolute;
+        top: 33px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #fff;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+
+    .lds-ellipsis div:nth-child(1) {
+        left: 8px;
+        animation: lds-ellipsis1 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(2) {
+        left: 8px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(3) {
+        left: 32px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(4) {
+        left: 56px;
+        animation: lds-ellipsis3 0.6s infinite;
+    }
+
+    @keyframes lds-ellipsis1 {
+        0% {
+            transform: scale(0);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes lds-ellipsis3 {
+        0% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(0);
+        }
+    }
+
+    @keyframes lds-ellipsis2 {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        100% {
+            transform: translate(24px, 0);
+        }
+    }
+
+
+    /* < !-- loeder end================>--> */
+
+
+
+    #btn_edit {
+        float: right;
+    }
+
+    #btn_delete {
+        float: right;
+        margin-left: 10px;
+    }
+
+    #addbotton {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+    }
+
+    #div_comments {
+        cursor: pointer;
+    }
+
+    #input_comment {
+        width: 68%;
+        border: 1px solid #d4d4d4;
+        padding: 5px;
+    }
+
+    .comment {
+        cursor: auto;
+    }
+</style>
+
+<body style="background-color:#f0ecff;">
+    <!-- loeder___ -->
+    <div id="loeder" style="width: 90px; visibility: hidden; height: 90px; background-color: #767777e4; border-radius: 15px; position: fixed; display: flex; align-items: center; justify-content: center; top: 0; bottom: 0; right:0; left:0; margin: auto; z-index: 100000000000000000000000000000000000000000000000000000000000000000000; ">
+        <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!-- loeder end_________ -->
+
+    <!-- alerts_____________ -->
+
+    <div id="success-alert" style="z-index: 100000; position: fixed;right: 10px; bottom: 10px; ">
+    </div>
+
+    <!-- alert end  -->
+
+
+    <!-- models__________ -->
+    <div class="loginmodel">
+        <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="login-modalLabel">Login</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">UserName:</label>
+                                <input type="text" class="form-control" id="username">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Password:</label>
+                                <input type="password" class="form-control" id="Password">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="login()">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="registermodel">
+        <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="register-modalLabel">Register</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="register-name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">UserName:</label>
+                                <input type="text" class="form-control" id="register-username">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Password:</label>
+                                <input type="password" class="form-control" id="register-Password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Profile Image </label>
+                                <input type="file" multiple class="form-control" id="Profile-image">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="register()">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="creatrmodel">
+        <div class="modal fade" id="creat-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="creat-modal-title">CreatPost</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Title:</label>
+                                <input type="text" class="form-control" id="post-Title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Body:</label>
+                                <input type="text" class="form-control" id="post-Body">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Image:</label>
+                                <input type="file" multiple class="form-control" id="post-file">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btn-post-creat"
+                            onclick="creatpost()">CreatPost</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="commentsmodel">
+        <div class="modal fade" id="comments-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="creat-modal-modalLabel">Comments :</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="div_comments">
+                            <!-- <div class="mb-3 comment">
+                                <div class="comment-header" style="display: inline-block; margin-right: 10px;">
+                                    <img src="./userslogo/logo.PNG" class="border rounded-circle" alt="" id="profile_imag_incomments"
+                                        style="width: 50px; height: 50px;">
+                                    <b id="userincomment"></b>
+                                </div>
+                                <div class="commentbody" style="display: inline-block;" >
+                                    <p>Lorem ipsum dolor sit amet. lor</p>
+                                </div>
+                            </div> -->
+
+                            <!-- <hr> -->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="text" placeholder="Write Comment" id="input_comment">
+                        <button type="button" class="btn btn-primary" onclick="creat_commment()">CreatComment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="deletemodel">
+        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="delete-modal-modalLabel">Are you shor aboute delete post ?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="deletepostfun()">Delete Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- models end_________ -->
+    <!-- add button____________ -->
+
+    <div class="bg-primary rounded-circle" id="addbotton" onclick="creatpostmodalfun()">
+        <ion-icon name="add-outline" style="width: 70px; height: 70px;"></ion-icon>
+    </div>
+
+    <!-- add button end____________ -->
+
+
+    <!-- nav_______________ -->
+
+
+    <div class="container" style="display: flex ; justify-content: center;">
+        <div class="col-10">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary shadow " style="padding-top: 20px;">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Ghaith Media</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="getuseridsame()" style="cursor: pointer;">Profile</a>
+                            </li>
+                        </ul>
+                        <div class="w-100% justify-content-end" style="display: flex; ">
+                            <div id="div_imagand_username"
+                                style="margin-right: 5px; display: flex; align-items: center;">
+                                <img src="" class="border rounded-circle" id="img-div-profile"
+                                    style="width: 50px; height: 50px;">
+                                <b id="usernameinnav"></b>
+                            </div>
+                            <div id="divlogin">
+                                <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal"
+                                    data-bs-target="#login-modal">Login</button>
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#register-modal">Register</button>
+
+                            </div>
+                            <div id="divlogout">
+                                <button type="button" class="btn btn-outline-danger" onclick="logout()">Logout</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    </div>
+
+
+    <!-- nav end   -->
+
+    <!-- posts___________  -->
+
+
+    <div class="container mt-5" style="height: 1000px; display: flex ; justify-content: center; ">
+
+        <div class="col-8 " id="allcards">
+
+            <!-- <div class="card shadow" style="margin-top: 30px;" id="card">
+
+                <div class="card-header">
+                    <img src="./userslogo/logo.PNG" class="border rounded-circle" alt=""
+                        style="width: 50px; height: 50px;">
+                    <b>@Ghaith</b>
+                    <button id="btn_edit" class="btn btn-outline-primary" style="margin-top: 7px;">edit<ion-icon name="create-outline"></ion-icon></button>
+                </div>
+                <div class="card-body">
+                    <img src="./imag/wallpaperflare.com_wallpaper (1).jpg" alt="" style="width: 100%;">
+                    <h7 style="color: gray;" class="mt-2"> 2 Minutes Later</h7>
+                    <h5>Hello world</h5>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur culpa accusantium nobis fugit
+                        quaerat vel, nisi ipsum doloribus ad ex rem magni illo dolorum, quas, nostrum vero. Veniam, ipsa
+                        obcaecati.</p>
+                    <hr>
+                    <div style="display: flex; align-items: center;">
+                        <div>
+
+                            <span>
+                                <img src="./chatbox-outline.svg" alt="" style="width: 25px; height:25px ;">
+                                <p style="display:inline-block ;margin-left: 5px;" id="btn_comments"
+                                    onclick="commentsfun()">(3) Comments</p>
+
+                            </span>
+                            <div class="tags mx-3" id="tags" style="display:inline-block">
+                                <button class="tag rounded-pill"
+                                    style="padding: 7px 20px; color: #f0ecff; background-color: rgb(82, 82, 82); ">
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div> 
+ -->
+        </div>
+
+    </div>
+
+    <!-- posts___________  -->
+
+</body>
+<script src="./js/togatherfun.js"></script>
+<script src="./js/get-posts.js"></script>
+
+</html>
